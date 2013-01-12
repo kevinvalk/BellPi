@@ -6,13 +6,13 @@ project(sockets)
 set(SOCKETS_VERSION_MAJOR 2)
 set(SOCKETS_VERSION_MINOR 3.9.7)
 
-# default configuration values
-set(HAVE_OPENSSL 1)
-set(NO_GETADDRINFO 1)
-set(ENABLE_RESOLVER 1)
-set(ENABLE_RECONNECT 1)
-set(ENABLE_DETACH 1)
-set(ENABLE_EXCEPTIONS 1)
+# Options for sockets library
+option(HAVE_OPENSSL "HAVE_OPENSSL" OFF)
+option(NO_GETADDRINFO "NO_GETADDRINFO" ON)
+option(ENABLE_RESOLVER "ENABLE_RESOLVER" ON)
+option(ENABLE_RECONNECT "ENABLE_RECONNECT" ON)
+option(ENABLE_DETACH "ENABLE_DETACH" ON)
+option(ENABLE_EXCEPTIONS "ENABLE_EXCEPTIONS" ON)
 
 # Sources for C++ Sockets library
 set(SOCKETS_SRCS
@@ -36,6 +36,10 @@ if(NOT WIN32)
 	list(APPEND SOCKETS_SRCS Semaphore.cpp)
 endif()
 
+# Possible undefinided variable fix
+set(LIB_EAY_RELEASE 0)
+set(SSL_EAY_RELEASE 0)
+	
 # Add the library
 add_library(sockets STATIC ${SOCKETS_SRCS})
 
@@ -46,7 +50,7 @@ find_package(Threads REQUIRED)
 if(HAVE_OPENSSL)
 	find_package(OpenSSL)
 	if(NOT OPENSSL_FOUND)
-		set(OPENSSL_FOUND FALSE)
+		set(HAVE_OPENSSL 0)
 		message("Disabling openssl as we could not find it")
 	endif()
 endif()
