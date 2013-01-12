@@ -22,8 +22,9 @@ endif()
 
 # Add a list of path definitions
 set(SOCKET_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Sockets)
+set(WIRINGPI_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wiringPi)
 
-if(NOT WIN32)
+if(NOT WIN32 AND NOT CYGWIN)
 	add_subdirectory(wiringPi)
 endif()
 

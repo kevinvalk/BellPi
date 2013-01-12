@@ -4,6 +4,7 @@ project(BellServer)
 
 # Include socket includes
 include_directories(${SOCKET_INCLUDE_DIR})
+include_directories(${WIRINGPI_INCLUDE_DIR})
 link_directories(${LIBRARY_OUTPUT_PATH})
 
 #Build a list of all sources for the server
