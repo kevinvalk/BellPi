@@ -13,3 +13,7 @@ set(SERVER_SRCS Main.cpp BellSocket.cpp BellServer.cpp)
 # Add target and link sockets with this executable
 add_executable(BellServer ${SERVER_SRCS})
 target_link_libraries(BellServer sockets)
+if(RASPBERRY)
+	target_link_libraries(BellServer wiringPi)
+endif()
+

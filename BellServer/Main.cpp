@@ -3,6 +3,10 @@
 #include <SocketHandler.h>
 #include <ListenSocket.h>
 
+#ifdef RASPBERRY
+#include <wiringPi.h>
+#endif
+
 #define BELL_PORT 8311
 #define BELL_IP "0.0.0.0"
 
@@ -34,11 +38,33 @@ int main()
 	// Add the socket to the handler
 	handler.Add(&listener);
 	
+	#ifdef RASPBERRY
+	// Enable GPIO
+	if(wiringPiSetup() < 0)
+	{
+			printf("Could not initialize wiringPi library");
+			exit(-1);
+	}
+	#endif
+
 	// The main loop
-	handler.Select(1,0);
 	while(true)
 	{
-		handler.Select(1,0);
+		handler.Select(0, 100000); // Sleeps for a 1/10 of a second
+		
+		#ifdef RASPBERRY
+		// Check for GPIO signals
+		for(uint32 i = 0; i < 7; i++)
+		{
+			bool hadRead = false;
+			if(digitalRead(i) == HIGH)
+			{
+				printf("HIGH button %i\n", i);
+				hadRead = true;
+			}
+			if(hadRead) delay(500); // Sleeps for 1/2 second
+		}
+		#endif
 	}
 }
 
