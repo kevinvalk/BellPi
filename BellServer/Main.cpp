@@ -4,16 +4,14 @@
 
 int main()
 {
-	SocketHandler h;
-	ClientSocket *p = new ClientSocket(h);
+	SocketHandler handler;
+	ClientSocket *server = new ClientSocket(h);
 
-	p -> SetDeleteByHandler();
-	p -> Open("localhost", 9002);
-	h.Add(p);
-	h.Select(1,0);
-	while (h.GetCount())
-	{
-		h.Select(1,0);
-	}
+	server->SetDeleteByHandler();
+	server->Open("localhost", 9002);
+	handler.Add(p);
+	handler.Select(1,0);
+	while (.GetCount())
+		handler.Select(1,0);
 }
 
