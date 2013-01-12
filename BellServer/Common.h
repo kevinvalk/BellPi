@@ -23,11 +23,41 @@ typedef unsigned char       uint8;
 using std::vector;
 using std::map;
 
+enum PacketCmd //uint32
+{
+	FAIL = 0,
+	SUCCESS,
+	REGISTER,
+	UNREGISTER,
+};
+
 //This is really needed right? or is it not?
 #pragma pack(push, 1) //byte-aligned
 struct Packet
 {
-
+	public:
+	uint32 key;
+	uint8 index;
+	PacketCmd cmd;
+	uint16 length;
+	private:
+	uint8 data;
+	
+	public:
+	uint8 *getData()
+	{
+		return &data;
+	}
+	
+	static Packet* createPacket(uint32 size)
+	{
+		return (Packet*)new char[size];
+	}
+	
+	static void deletePacket(Packet *p)
+	{
+		return delete[] (char*)p;
+	}
 };
 #pragma pack(pop)
 #endif

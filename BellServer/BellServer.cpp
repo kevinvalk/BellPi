@@ -1,6 +1,6 @@
 #include "BellServer.h"
 
-BellServer::BellServer(uint32 keyMaster, uint32 *keyVersions, uint32 keyMax)
+BellServer::BellServer(uint32 keyMaster, uint32 *keyVersions, uint8 keyMax)
 {
 	keyMaster_ = keyMaster;
 	keyVersions_ = keyVersions;
@@ -8,10 +8,11 @@ BellServer::BellServer(uint32 keyMaster, uint32 *keyVersions, uint32 keyMax)
 	
 	printf("BellServer with master key: %08X\n", keyMaster);
 	
-	for(uint32 i = 0; i < keyMax_; i++)
+	// Build all keys for all clients
+	for(uint8 i = 0; i < keyMax_; i++)
 	{
-		uint32 clientKey = indexToKey(i, keyMaster_, getKeyVersion(i));
-		uint32 clientIndex = keyToIndex(clientKey, keyMaster_, getKeyVersion(i));
+		uint32 clientKey = indexToKey(i);
+		uint32 clientIndex = keyToIndex(clientKey, i);
 		
 		printf("Client %i (version: %i) with key %08X, decrypted key: %i\n", (i+1), getKeyVersion(i), clientKey, clientIndex);
 		
@@ -20,6 +21,9 @@ BellServer::BellServer(uint32 keyMaster, uint32 *keyVersions, uint32 keyMax)
 			printf("There is an error in the key algorithm, EXIT!");
 			exit(1);
 		}
+		
+		// Add it to the list
+		clientBells_[clientKey][0] = NULL;
 	}
 }
 
@@ -28,28 +32,62 @@ BellServer::~BellServer()
 
 }
 
-int32 BellServer::getKeyVersion(uint32 index)
+int32 BellServer::getKeyVersion(uint8 index)
 {
 	if(index < keyMax_)
 		return keyVersions_[index];
 	return -1;
 }
 
-uint32 BellServer::indexToKey(uint32 index, uint32 keyMaster, uint32 version)
+uint32 BellServer::indexToKey(uint8 index)
 {
-	return (((index << (32 - keyMax_)) ^ keyMaster) ^ version);
+	return (((index << (32 - keyMax_)) ^ keyMaster_) ^ getKeyVersion(index));
 }
 
-uint32 BellServer::keyToIndex(uint32 key, uint32 keyMaster, uint32 version)
+uint32 BellServer::keyToIndex(uint32 key, uint8 index)
 {
-	return ((key ^ version) ^ keyMaster) >> (32 - keyMax_);
+	return ((key ^ getKeyVersion(index)) ^ keyMaster_) >> (32 - keyMax_);
 }
-		
+
+bool BellServer::registerClient(uint32 key, socketuid_t uid, BellSocket *socket)
+{
+	ClientsIt clientIt;
+	ClientsBellsIt bellIt;
+	
+	// Skip uid == 0 as that is reserved
+	if(uid == 0)
+		return false;
+	
+	// Check if this key even exists
+	bellIt = clientBells_.find(key);
+	if(bellIt == clientBells_.end())
+	{
+		printf("This key does not exists!\n");
+		return false;
+	}
+	
+	// Check if it already exists if so we can not register you
+	Clients *bells = &clientBells_[key];
+	clientIt = bells->find(uid);
+	if(clientIt != bells->end())
+		return false;
+	
+	// Register this socket
+	(*bells)[uid] = socket;
+	return true;
+}
+
+bool BellServer::unregisterClient(uint32 key, socketuid_t uid)
+{
+	Clients *bells = &clientBells_[key];
+	return bells->erase(uid);
+}
+
 void BellServer::dissconectClients()
 {
-	for(uint32 i = 0; i < bellSockets_.size(); i++)
+	for(uint32 i = 0; i < bells_.size(); i++)
 	{
-		BellSocket* bellSocket = bellSockets_.at(i);
+		BellSocket* bellSocket = bells_.at(i);
 		bellSocket->quit(); //stop the thread
 	}
 }

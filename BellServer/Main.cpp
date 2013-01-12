@@ -1,6 +1,7 @@
 #include "BellServer.h"
 #include "BellSocket.h"
 #include <SocketHandler.h>
+#include <ListenSocket.h>
 
 #define BELL_PORT 8311
 #define BELL_IP "0.0.0.0"
@@ -21,17 +22,21 @@ int main()
 
 	// Create socket and handler
 	SocketHandler handler;
-	BellSocket *bellSocket = new BellSocket(handler);
+	ListenSocket<BellSocket> listener(handler);
 
-	bellSocket->SetDeleteByHandler();
-	bellSocket->Open(BELL_IP, BELL_PORT);
+	if(listener.Bind(BELL_IP, BELL_PORT))
+	{
+		printf("Could not bind to %s:%d", BELL_IP, BELL_PORT);
+		exit(-1);
+	}
+	
 
 	// Add the socket to the handler
-	handler.Add(bellSocket);
+	handler.Add(&listener);
 	
 	// The main loop
 	handler.Select(1,0);
-	while(handler.GetCount())
+	while(true)
 	{
 		handler.Select(1,0);
 	}
