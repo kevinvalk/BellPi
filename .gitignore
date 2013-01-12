@@ -4,5 +4,7 @@ CMakeFiles
 cmake_install.cmake
 Makefile
 
-# CMake generated source files
+# CMake generated files and builds
 sockets-config.h
+build/*
+
