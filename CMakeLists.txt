@@ -23,6 +23,9 @@ endif()
 # Add a list of path definitions
 set(SOCKET_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Sockets)
 
-#add_subdirectory(wiringPi)
+if(NOT WIN32)
+	add_subdirectory(wiringPi)
+endif()
+
 add_subdirectory(Sockets)
 add_subdirectory(BellServer)
