@@ -14,7 +14,7 @@ BellServer::BellServer(uint32 keyMaster, uint32 *keyVersions, uint8 keyMax)
 		uint32 clientKey = indexToKey(i);
 		uint32 clientIndex = keyToIndex(clientKey, i);
 		
-		printf("Client %i (version: %i) with key %08X, decrypted key: %i\n", (i+1), getKeyVersion(i), clientKey, clientIndex);
+		printf("Client %i (version: %i) with key %08X, decrypted key: %i\n", i, getKeyVersion(i), clientKey, clientIndex);
 		
 		if(clientIndex != i)
 		{
@@ -47,6 +47,29 @@ uint32 BellServer::indexToKey(uint8 index)
 uint32 BellServer::keyToIndex(uint32 key, uint8 index)
 {
 	return ((key ^ getKeyVersion(index)) ^ keyMaster_) >> (32 - keyMax_);
+}
+
+void BellServer::handleButton(uint8 buttonNo)
+{
+	switch(buttonNo)
+	{
+		case 6:
+			printf("Call all\n");
+		break;
+		default:
+			uint32 key = indexToKey(buttonNo);
+			printf("Calling client %i with key: %08X\n", buttonNo, key);
+			Clients *bells = &clientBells_[key];
+			
+			// Go through all client attached to this bell
+			for(ClientsIt it=bells->begin(); it!=bells->end(); it++)
+			{
+				if(it->first == 0) continue;
+				BellSocket *socket = it->second;
+				socket->handleCall();
+			}
+		break;
+	}
 }
 
 bool BellServer::registerClient(uint32 key, socketuid_t uid, BellSocket *socket)

@@ -15,6 +15,12 @@ void BellSocket::quit()
 	SetCloseAndDelete();
 }
 
+void BellSocket::OnDisconnect()
+{
+	if(key_ != 0) // Unregister if this client was registered
+		handleUnregister(NULL);
+}
+
 void BellSocket::OnRead()
 {
 	// Move it to ibuf
@@ -66,6 +72,27 @@ void BellSocket::OnRead()
 		}
 		Packet::deletePacket(packet);
 	}
+}
+
+Packet *BellSocket::initPacket(PacketCmd cmd, uint32 size)
+{
+	Packet *packet = Packet::createPacket(PACKET_HEADER+size);
+	packet->key = key_;
+	packet->index = index_;
+	packet->cmd = cmd;
+	return packet;
+}
+
+void BellSocket::handleCall()
+{
+	// Build the call packet
+	Packet *packet = initPacket(CALL, sizeof(time_t));
+	packet->setDword(0, (uint32)time(NULL));
+	
+	printf("Called client: %08X\n", UniqueIdentifier());
+	
+	// Send it to this client
+	SendBuf((char*)packet, packet->totalLength());
 }
 
 bool BellSocket::handleUnregister(Packet *packet)

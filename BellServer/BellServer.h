@@ -21,6 +21,7 @@ class BellServer
 		int32 getKeyVersion(uint8 index);
 		uint32 indexToKey(uint8 index);
 		uint32 keyToIndex(uint32 key, uint8 index);
+		void handleButton(uint8 buttonNo);
 		
 		bool registerClient(uint32 key, socketuid_t uid, BellSocket *socket);
 		bool unregisterClient(uint32 key, socketuid_t uid);

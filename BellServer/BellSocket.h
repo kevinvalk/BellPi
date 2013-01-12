@@ -13,14 +13,20 @@ class BellSocket : public TcpSocket
 		BellSocket(ISocketHandler& );
 
 		void OnRead();
+		void OnDisconnect();
 		void quit();
 		
-		// Handlers
+		// Handlers out
+		void handleCall();
+		
+		// Handlers in
 		bool handleUnregister(Packet *packet);
 		bool handleRegister(Packet *packet);
 	
 	private:
 		uint32 key_;
 		uint8 index_;
+		
+		Packet *initPacket(PacketCmd cmd, uint32 size);
 };
 #endif

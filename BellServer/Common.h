@@ -16,6 +16,7 @@ typedef unsigned char       uint8;
 //Includes
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <vector>
 #include <map>
 
@@ -29,9 +30,10 @@ enum PacketCmd //uint32
 	SUCCESS,
 	REGISTER,
 	UNREGISTER,
+	CALL,
 };
 
-//This is really needed right? or is it not?
+#define PACKET_HEADER 4+1+4+2
 #pragma pack(push, 1) //byte-aligned
 struct Packet
 {
@@ -47,6 +49,35 @@ struct Packet
 	uint8 *getData()
 	{
 		return &data;
+	}
+	
+	void setByte(uint32 index, uint8 input)
+	{
+		length += 1;
+		*((uint8*)(getData()+index)) = input;
+	}
+	
+	void setWord(uint32 index, uint16 input)
+	{
+		length += 2;
+		*((uint16*)(getData()+index)) = input;
+	}
+	
+	void setDword(uint32 index, uint32 input)
+	{
+		length += 4;
+		*((uint32*)(getData()+index)) = input;
+	}
+	
+	void setQword(uint32 index, uint64 input)
+	{
+		length += 8;
+		*((uint64*)(getData()+index)) = input;
+	}
+	
+	uint32 totalLength()
+	{
+		return length+PACKET_HEADER;
 	}
 	
 	static Packet* createPacket(uint32 size)
