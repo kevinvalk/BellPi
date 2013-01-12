@@ -1,0 +1,39 @@
+# OS generated files
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Editors / debuggers / other output files
+*~
+*.bak
+*.orig
+*.patch
+callgrind.out.*
+_ReSharper*
+*.idb
+*.dat
+
+# Visual studio
+*.webinfo
+*.ncb
+*.suo
+*.sdf
+*.opensdf
+*.sln.cache
+*.vsp
+*.exp
+ipch
+*.user
+
+bin
+GeneratedFiles
+Debug
+Release
+*__Win*
+
+# Subversion data folders
+.svn
+
+# Others
+bin/*
