@@ -10,26 +10,28 @@ SET(TESTS
 	sockets_test
 	base64
 	semtest
-	echoserver
 	stressclient
 	http
-	httpd
 	retry
 	resume
-	http_post
 	x
 	copy
 	crlf
-	https
 	sloppy_http
 	chunked
-	threadstress
+	echoserver
 	listener
-	httpd_test
 	scanr
+	http_post
+	httpd
 	json
 	detach
 )
+
+# When we have openssl we can include some ssl tests
+if(HAVE_OPENSSL)
+	list(APPEND TESTS httpd_test https threadstress)
+endif()
 
 FOREACH(test ${TESTS})
 	ADD_EXECUTABLE(${test} ${test}.cpp)

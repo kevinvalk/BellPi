@@ -19,10 +19,20 @@ endif()
 if(WIN32)
 	add_definitions(-D_WIN32)
 endif()
+if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "armv6l")
+	set(RASPBERRY 1)
+	add_definitions(-DRASPBERRY)
+else()
+	set(RASPBERRY 0)
+endif()
 
 # Add a list of path definitions
 set(SOCKET_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Sockets)
+set(WIRINGPI_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/wiringPi)
 
-#add_subdirectory(wiringPi)
+if(RASPBERRY)
+	add_subdirectory(wiringPi)
+endif()
+
 add_subdirectory(Sockets)
 add_subdirectory(BellServer)
