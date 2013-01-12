@@ -2,7 +2,7 @@ import socket
 import sys
 import time
 
-HOST, PORT = "localhost", 8311
+HOST, PORT = "192.168.1.3", 8311
 clientKey = 0xCAADBCB7
 packet = [0x8B, 0xBE, 0xAD, 0xDE, 0, 2, 0, 0, 0]
 packet2 = [0x8B, 0xBE, 0xAD, 0xDE, 0, 3, 0, 0, 0]

@@ -80,6 +80,7 @@ Packet *BellSocket::initPacket(PacketCmd cmd, uint32 size)
 	packet->key = key_;
 	packet->index = index_;
 	packet->cmd = cmd;
+	packet->length = 0;
 	return packet;
 }
 

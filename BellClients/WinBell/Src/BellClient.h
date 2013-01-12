@@ -13,8 +13,9 @@
 #include <QListWidget>
 #include <QList>
 #include <QTcpSocket>
+#include <Phonon/phonon>
 #include "ui_Main.h"
-#include "typedef.h"
+#include "..\..\..\BellServer\Common.h"
 
 class BellClient : public QMainWindow
 {
@@ -23,6 +24,11 @@ class BellClient : public QMainWindow
 public:
 	BellClient(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~BellClient();
+
+	// Handlers out
+	Packet *initPacket(PacketCmd cmd, uint32 size);
+	void handleRegister();
+	
 
 public slots:
 	void update();
@@ -33,6 +39,15 @@ private:
 	QSystemTrayIcon *tray;
 	QTimer *timer;
 	QTcpSocket *socket;
+
+	Packet *recvPacket;
+
+	// Sound output
+	Phonon::MediaObject *sound;
+
+	// Client info
+	uint32 key_;
+	uint8 index_;
 
 protected:
 	bool event(QEvent *event);
