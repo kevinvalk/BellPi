@@ -7,7 +7,7 @@ include_directories(${SOCKET_INCLUDE_DIR})
 link_directories(${LIBRARY_OUTPUT_PATH})
 
 #Build a list of all sources for the server
-set(SERVER_SRCS Main.cpp ClientSocket.cpp)
+set(SERVER_SRCS Main.cpp BellSocket.cpp BellServer.cpp)
 
 # Add target and link sockets with this executable
 add_executable(BellServer ${SERVER_SRCS})

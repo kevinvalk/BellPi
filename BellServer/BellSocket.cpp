@@ -1,14 +1,20 @@
-#include "ClientSocket.h"
+#include "BellSocket.h"
 
 // the constant TCP_BUFSIZE_READ is the maximum size of the standard input
 // buffer of TcpSocket
 #define RSIZE TCP_BUFSIZE_READ
 
-ClientSocket::ClientSocket(ISocketHandler& h) : TcpSocket(h)
+BellSocket::BellSocket(ISocketHandler& h) : TcpSocket(h)
 {
+
 }
 
-void ClientSocket::OnRead()
+void BellSocket::quit()
+{
+
+}
+
+void BellSocket::OnRead()
 {
 	// OnRead of TcpSocket actually reads the data from the socket
 	// and moves it to the input buffer (ibuf)

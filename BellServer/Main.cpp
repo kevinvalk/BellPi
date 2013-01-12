@@ -1,17 +1,39 @@
-#include "ClientSocket.h"
+#include "BellServer.h"
+#include "BellSocket.h"
 #include <SocketHandler.h>
 
+#define BELL_PORT 8311
+#define BELL_IP "0.0.0.0"
+
+#define KEY_MAX 6
+#define KEY_MASTER 0xDEADBEEF
+#define KEY_VERSIONS {100, 200, 300, 400, 500, 600}
+
+BellServer* bellServer;
 
 int main()
 {
-	SocketHandler handler;
-	ClientSocket *server = new ClientSocket(h);
+	// The key versions
+	uint32 keyVersions[KEY_MAX] = KEY_VERSIONS; 
 
-	server->SetDeleteByHandler();
-	server->Open("localhost", 9002);
-	handler.Add(p);
+	// Create the server
+	bellServer = new BellServer(KEY_MASTER, keyVersions, KEY_MAX);
+
+	// Create socket and handler
+	SocketHandler handler;
+	BellSocket *bellSocket = new BellSocket(handler);
+
+	bellSocket->SetDeleteByHandler();
+	bellSocket->Open(BELL_IP, BELL_PORT);
+
+	// Add the socket to the handler
+	handler.Add(bellSocket);
+	
+	// The main loop
 	handler.Select(1,0);
-	while (.GetCount())
+	while(handler.GetCount())
+	{
 		handler.Select(1,0);
+	}
 }
 
