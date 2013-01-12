@@ -1,0 +1,8 @@
+# CMake related stuff
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+Makefile
+
+# CMake generated source files
+sockets-config.h
