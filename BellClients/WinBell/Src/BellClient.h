@@ -29,12 +29,13 @@ public:
 
 	// Handlers out
 	Packet *initPacket(PacketCmd cmd, uint32 size);
+	void handleConnect();
 	void handleRegister();
 	void handleCall(Packet *packet);
 
 public slots:
 	void update();
-	
+
 private:
 	Ui::BellClientClass ui;
 	QMenu *menu;
@@ -43,6 +44,8 @@ private:
 	QTcpSocket *socket;
 
 	Packet *recvPacket;
+	uint32 reconnect;
+	bool notifyDc;
 
 	// Sound output
 	Phonon::MediaObject *sound;

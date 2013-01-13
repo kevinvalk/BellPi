@@ -6,6 +6,7 @@ BellClient::BellClient(QWidget *parent, Qt::WFlags flags)
 {
 
 	tray = nullptr;
+	notifyDc = false;
 
 	// Read settings
 	QSettings settings("config.ini", QSettings::IniFormat);
@@ -53,10 +54,6 @@ BellClient::BellClient(QWidget *parent, Qt::WFlags flags)
 
 	// Create the socket
 	socket = new QTcpSocket(parent);
-	socket->connectToHost(host_, port_);
-
-	// Register us
-	handleRegister();
 }
 
 BellClient::~BellClient()
@@ -105,6 +102,20 @@ void BellClient::update()
 {
 	// Check for packets
 	int size = socket->read((char*)recvPacket, 200);
+
+	if(notifyDc)
+	{
+		tray->showMessage(tr("Bel kapot?"), tr("De verbinding met de bel is verloren!"), QSystemTrayIcon::NoIcon, 3000);
+		notifyDc = false;
+	}
+
+	if(socket->state() == QAbstractSocket::UnconnectedState && reconnect >= 1000)
+	{
+		//Try reconnect
+		handleConnect();
+		reconnect = 0;
+	}
+	reconnect++;
 
 	if(size > 0)
 	{

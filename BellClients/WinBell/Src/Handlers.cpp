@@ -10,10 +10,30 @@ Packet *BellClient::initPacket(PacketCmd cmd, uint32 size)
 	return packet;
 }
 
+void BellClient::handleConnect()
+{
+	// Connect
+	socket->connectToHost(host_, port_);
+
+	if(!socket->waitForConnected(500))
+	{
+		notifyDc = true;
+		return;
+	}
+
+	// Register us
+	handleRegister();
+}
+
 void BellClient::handleRegister()
 {
 	Packet *packet = initPacket(REGISTER, 0);
 	socket->write((char*)packet, packet->totalLength());
+
+	// Show tooltip
+	tray->showMessage(tr("Registreert!"), tr("U zult geluid horen zodra iemand op de bel drukt."), QSystemTrayIcon::NoIcon, 3000);
+	reconnect = 0;
+	notifyDc = false;
 }
 
 void BellClient::handleCall(Packet *packet)
@@ -25,7 +45,6 @@ void BellClient::handleCall(Packet *packet)
 	// Parse bell time
 	QDateTime timestamp;
 	timestamp.setTime_t(packet->getDword(0));
-	
 
 	// Show tooltip
 	tray->showMessage(tr("Dingdong om ")+timestamp.toString(Qt::SystemLocaleShortDate)+"!", tr("Er staat iemand aan de deur!"), QSystemTrayIcon::NoIcon, 3000);
