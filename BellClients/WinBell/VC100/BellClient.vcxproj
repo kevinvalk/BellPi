@@ -67,7 +67,8 @@
     <PostBuildEvent>
       <Command>IF NOT EXIST "$(OutDir)\QtCored4.dll" copy $(QTDIR)\bin\QtCored4.dll $(OutDir)
 IF NOT EXIST "$(OutDir)\QtGuid4.dll" copy $(QTDIR)\bin\QtGuid4.dll $(OutDir)
-IF NOT EXIST "$(OutDir)\QtNetworkd4.dll" copy $(QTDIR)\bin\QtNetworkd4.dll $(OutDir)</Command>
+IF NOT EXIST "$(OutDir)\QtNetworkd4.dll" copy $(QTDIR)\bin\QtNetworkd4.dll $(OutDir)
+IF NOT EXIST "$(OutDir)\phonond4.dll" copy $(QTDIR)\bin\phonond4.dll $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -89,7 +90,8 @@ IF NOT EXIST "$(OutDir)\QtNetworkd4.dll" copy $(QTDIR)\bin\QtNetworkd4.dll $(Out
     <PostBuildEvent>
       <Command>IF NOT EXIST "$(OutDir)\QtCore4.dll" copy $(QTDIR)\bin\QtCore4.dll $(OutDir)
 IF NOT EXIST "$(OutDir)\QtGui4.dll" copy $(QTDIR)\bin\QtGui4.dll $(OutDir)
-IF NOT EXIST "$(OutDir)\QtNetwork4.dll" copy $(QTDIR)\bin\QtNetwork4.dll $(OutDir)</Command>
+IF NOT EXIST "$(OutDir)\QtNetwork4.dll" copy $(QTDIR)\bin\QtNetwork4.dll $(OutDir)
+IF NOT EXIST "$(OutDir)\phonon4.dll" copy $(QTDIR)\bin\phonon4.dll $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

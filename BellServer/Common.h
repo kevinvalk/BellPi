@@ -51,6 +51,26 @@ struct Packet
 		return &data;
 	}
 	
+	uint8 getByte(uint32 index)
+	{
+		return *((uint8*)(getData()+index));
+	}
+
+	uint16 getWord(uint32 index)
+	{
+		return *((uint16*)(getData()+index));
+	}
+
+	uint32 getDword(uint32 index)
+	{
+		return *((uint32*)(getData()+index));
+	}
+
+	uint64 getQword(uint32 index)
+	{
+		return *((uint64*)(getData()+index));
+	}
+
 	void setByte(uint32 index, uint8 input)
 	{
 		length += 1;

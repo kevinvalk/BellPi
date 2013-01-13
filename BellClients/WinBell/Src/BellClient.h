@@ -1,8 +1,10 @@
 #ifndef BELLCLIENT_H
 #define BELLCLIENT_H
 
+#include <QSettings>
 #include <QtGui/QMainWindow>
 #include <QTimer>
+#include <QDateTime>
 #include <QString>
 #include <QVector>
 #include <QMenu>
@@ -28,11 +30,11 @@ public:
 	// Handlers out
 	Packet *initPacket(PacketCmd cmd, uint32 size);
 	void handleRegister();
-	
+	void handleCall(Packet *packet);
 
 public slots:
 	void update();
-
+	
 private:
 	Ui::BellClientClass ui;
 	QMenu *menu;
@@ -44,6 +46,10 @@ private:
 
 	// Sound output
 	Phonon::MediaObject *sound;
+
+	// Settings
+	QString host_, soundPath_;
+	int port_;
 
 	// Client info
 	uint32 key_;
