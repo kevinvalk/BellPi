@@ -83,6 +83,18 @@ public class NetworkSocket extends AsyncTask<Void, byte[], Boolean>
 		return result;
 	}
 
+	public static String bytesToHex(byte[] bytes) {
+	    final char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+	    char[] hexChars = new char[bytes.length * 2];
+	    int v;
+	    for ( int j = 0; j < bytes.length; j++ ) {
+	        v = bytes[j] & 0xFF;
+	        hexChars[j * 2] = hexArray[v >>> 4];
+	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+	    }
+	    return new String(hexChars);
+	}
+	
 	public void SendPacket(byte[] packet)
 	{
 		Log.i("AsyncTask", "SendPacket: WORK DAM YOU!");
@@ -95,7 +107,10 @@ public class NetworkSocket extends AsyncTask<Void, byte[], Boolean>
 		{
 			Log.i("AsyncTask", "SendDataToNetwork: Message send failed. Caught an exception");
 		}
+		
 		Log.i("AsyncTask", "SendPacket: done!");
+		Log.i("AsyncTask", "Packet: "+bytesToHex(packet));
+		Log.i("AsyncTask", "DAFUQ");
 	}
 	
 	public void SendDataToNetwork(String cmd)

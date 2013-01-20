@@ -1,7 +1,5 @@
 package com.omniasoft.bellpi;
 
-import java.nio.ByteOrder;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -13,30 +11,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 
-import struct.JavaStruct;
-// Add structs support
-import struct.StructClass;
-import struct.StructException;
-import struct.StructField;
+// Import all packages
+import com.omniasoft.bellpi.packets.*;
+
 
 public class MainActivity extends Activity
 {
 	private NetworkSocket networkSocket;
-	
-	@StructClass
-	public class EmptyPacket 
-	{
-	    @StructField(order = 0)
-	    public int key;
-	    @StructField(order = 1)
-	    public byte index;
-	    @StructField(order = 2)
-	    public int cmd;
-	    @StructField(order = 3)
-	    public short length;
-	    // Data...
-	}
-	
+		
     @Override
 	public void onCreate(Bundle savedInstanceState)
     {
@@ -55,23 +37,10 @@ public class MainActivity extends Activity
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	
-            	EmptyPacket packet = new EmptyPacket();
-            	packet.key = 0xDEADBE8B;
-            	packet.index = 0;
-            	packet.cmd = 2;
-            	packet.length = 0;				
-				
+            	Register packet = new Register(0xDEADBE8B, 0);
+		
 				Log.d(getString(R.string.app_name), "Trying to send that shit");
-
-				try
-				{
-					networkSocket.SendPacket(JavaStruct.pack(packet, ByteOrder.LITTLE_ENDIAN));
-				}
-				catch (StructException e)
-				{
-					Log.d(getString(R.string.app_name), "ERRORS!");
-				}
-
+				networkSocket.SendPacket(packet.pack());
             }
         });
 	}
